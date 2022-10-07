@@ -10,10 +10,10 @@ cache:
 rvm:
   - 3.0.2
 addons:
-  postgresql: '13'
+  postgresql: "$PG_VERSION_MAJOR.$PG_VERSION_MINOR"
   apt:
     packages:
-      - postgresql-13
+      - postgresql-$PG_VERSION_MAJOR
   chrome: 'stable'
   artifacts:
     paths:
@@ -23,6 +23,8 @@ addons:
       - $(ls cypress/videos/*.* | tr "\n" ":")
     debug: true
 env:
+  jobs:
+    - PG_VERSION_MAJOR=13 PG_VERSION_MINOR=0
   global:
     - RAILS_ENV=test
     - DATABASE_URL=postgres://travis@localhost:5432/Forem_prod_test
