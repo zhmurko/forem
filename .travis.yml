@@ -10,10 +10,11 @@ cache:
 rvm:
   - 3.0.2
 addons:
-  postgresql: "$PG_VERSION_MAJOR.$PG_VERSION_MINOR"
+  postgresql: '13'
   apt:
     packages:
-      - postgresql-$PG_VERSION_MAJOR
+      - postgresql-13
+      - postgresql-14
   chrome: 'stable'
   artifacts:
     paths:
@@ -24,7 +25,8 @@ addons:
     debug: true
 env:
   jobs:
-    - PG_VERSION_MAJOR=13 PG_VERSION_MINOR=0
+    - POSTGRESQL_VERSION=13.0
+    - POSTGRESQL_VERSION=14.0
   global:
     - RAILS_ENV=test
     - DATABASE_URL=postgres://travis@localhost:5432/Forem_prod_test
@@ -47,8 +49,10 @@ env:
 before_install:
   - sudo apt-get update
   - sudo apt-get -y install gsfonts
+  - sudo service postgresql stop
   - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
-  - sudo service postgresql restart
+  - sudo service postgresql start $POSTGRESQL_VERSION
+  - psql -U postgres -tc 'SHOW server_version'
   - gem install bundler:"<2.3"
 install:
   - date --rfc-3339=seconds
