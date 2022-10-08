@@ -14,9 +14,12 @@ addons:
     sources:
       - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main'
         key_url: 'https://www.postgresql.org/media/keys/ACCC4CF8.asc'
+      - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main 15'
+        key_url: 'https://www.postgresql.org/media/keys/ACCC4CF8.asc'
     packages:
       - postgresql-13
       - postgresql-14
+      - postgresql-15
   chrome: 'stable'
   artifacts:
     paths:
@@ -29,6 +32,7 @@ env:
   jobs:
     - POSTGRESQL_VERSION=13 PGPORT=5432
     - POSTGRESQL_VERSION=14 PGPORT=5433
+    - POSTGRESQL_VERSION=15 PGPORT=5434
   global:
     - RAILS_ENV=test
     - DATABASE_URL=postgres://travis@localhost:5432/Forem_prod_test
@@ -53,7 +57,6 @@ before_install:
   - sudo apt-get -y install gsfonts
   - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5\|scram-sha-256/trust/g' /etc/postgresql/*/main/pg_hba.conf
   - sudo service postgresql restart ${POSTGRESQL_VERSION}
-  - sudo cat /etc/postgresql/*/main/pg_hba.conf
   - psql -U postgres -tc 'SHOW server_version'
   - createuser -U postgres --createdb --superuser -e travis
   - gem install bundler:"<2.3"
@@ -128,9 +131,6 @@ jobs:
         - bin/knapsack_pro_cypress
     - stage: Test
       name: "E2E Non-seeded"
-      env:
-        - POSTGRESQL_VERSION=13 PGPORT=5432
-        - POSTGRESQL_VERSION=14 PGPORT=5433
       script:
         - bundle exec rails db:create db:schema:load assets:precompile
         - yarn cypress install
