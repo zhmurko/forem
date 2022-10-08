@@ -52,7 +52,8 @@ before_install:
   - sudo apt-get update
   - sudo apt-get -y install gsfonts
   - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
-  - sudo service postgresql restart ${POSTGRESQL_VERSION%%.*}
+  - sudo service postgresql restart ${POSTGRESQL_VERSION}
+  - sudo cat /etc/postgresql/*/main/pg_hba.conf
   - sudo pg_lsclusters
   - psql -U postgres -tc 'SHOW server_version'
   - createuser -U postgres --createdb --superuser -e travis
