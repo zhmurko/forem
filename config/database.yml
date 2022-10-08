@@ -66,6 +66,7 @@ test:
   <<: *default
   url: <%= ENV.fetch("DATABASE_URL_TEST", "postgres:///Forem_test") %>
   database: <%= ENV.fetch("DATABASE_NAME_TEST", "Forem_test") %><%= ENV["TEST_ENV_NUMBER"] %>
+  port: <%= ENV.fetch("PGPORT", 5432).to_i %>
   variables:
       statement_timeout: <%= ENV.fetch("STATEMENT_TIMEOUT", 10_000).to_i %>
 

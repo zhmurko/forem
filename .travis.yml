@@ -27,8 +27,8 @@ addons:
     debug: true
 env:
   jobs:
-    - POSTGRESQL_VERSION=13.0
-    - POSTGRESQL_VERSION=14.0
+    - POSTGRESQL_VERSION=13.0 PGPORT=5432
+    - POSTGRESQL_VERSION=14.0 PGPORT=5433
   global:
     - RAILS_ENV=test
     - DATABASE_URL=postgres://travis@localhost:5432/Forem_prod_test
@@ -54,6 +54,7 @@ before_install:
   - sudo service postgresql stop
   - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
   - sudo service postgresql start $POSTGRESQL_VERSION
+  - sudo service postgresql status
   - psql -U postgres -tc 'SHOW server_version'
   - gem install bundler:"<2.3"
 install:
