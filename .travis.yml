@@ -33,7 +33,7 @@ env:
     - RAILS_ENV=test
     - DATABASE_URL=postgres://travis@localhost:5432/Forem_prod_test
     - DATABASE_NAME=Forem_prod_test
-    - DATABASE_URL_TEST=postgres://travis@localhost:5432/Forem_test
+    - DATABASE_URL_TEST=postgres://travis@localhost/Forem_test
     - DATABASE_NAME_TEST=Forem_test
     - STATEMENT_TIMEOUT=20000
     # Dummy values needed to verify the app boots via "rails runner"
@@ -56,6 +56,7 @@ before_install:
   - sudo service postgresql start $POSTGRESQL_VERSION
   - sudo service postgresql status
   - psql -U postgres -tc 'SHOW server_version'
+  - createuser -U postgres --createdb --superuser -e travis
   - gem install bundler:"<2.3"
 install:
   - date --rfc-3339=seconds
