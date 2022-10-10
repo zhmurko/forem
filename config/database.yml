@@ -20,6 +20,7 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("DATABASE_POOL_SIZE") { ENV.fetch("RAILS_MAX_THREADS", 5).to_i } %>
+  port: <%= ENV.fetch("DATABASE_PORT", 5432).to_i %>
   connect_timeout: 2
   checkout_timeout: 2
   variables:
@@ -66,7 +67,6 @@ test:
   <<: *default
   url: <%= ENV.fetch("DATABASE_URL_TEST", "postgres:///Forem_test") %>
   database: <%= ENV.fetch("DATABASE_NAME_TEST", "Forem_test") %><%= ENV["TEST_ENV_NUMBER"] %>
-  port: <%= ENV.fetch("PGPORT", 5432).to_i %>
   variables:
       statement_timeout: <%= ENV.fetch("STATEMENT_TIMEOUT", 10_000).to_i %>
 

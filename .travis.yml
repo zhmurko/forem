@@ -17,9 +17,7 @@ addons:
       - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main 15'
         key_url: 'https://www.postgresql.org/media/keys/ACCC4CF8.asc'
     packages:
-      - postgresql-13
-      - postgresql-14
-      - postgresql-15
+      - postgresql-${POSTGRESQL_VERSION}
   chrome: 'stable'
   artifacts:
     paths:
@@ -30,12 +28,12 @@ addons:
     debug: true
 env:
   jobs:
-    - POSTGRESQL_VERSION=13 PGPORT=5432
-    - POSTGRESQL_VERSION=14 PGPORT=5433
-    - POSTGRESQL_VERSION=15 PGPORT=5434
+    - POSTGRESQL_VERSION=13 DATABASE_PORT=5432
+    - POSTGRESQL_VERSION=14 DATABASE_PORT=5433
+    - POSTGRESQL_VERSION=15 DATABASE_PORT=5434
   global:
     - RAILS_ENV=test
-    - DATABASE_URL=postgres://travis@localhost:5432/Forem_prod_test
+    - DATABASE_URL=postgres://travis@localhost/Forem_prod_test
     - DATABASE_NAME=Forem_prod_test
     - DATABASE_URL_TEST=postgres://travis@localhost/Forem_test
     - DATABASE_NAME_TEST=Forem_test
